@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin — Nepaliकला</title>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+/* ═══════════════════════════════════════
+   ADMIN LAYOUT
+═══════════════════════════════════════ */
+body{background:#07101a}
+.admin-shell{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.admin-sidebar{width:240px;background:#070e17;border-right:1px solid rgba(200,168,75,.12);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:300;transition:width .3s}
+.admin-sidebar.collapsed{width:60px}
+.admin-sidebar.collapsed .sb-label,.admin-sidebar.collapsed .sidebar-brand-text,.admin-sidebar.collapsed .sb-section-label{opacity:0;pointer-events:none}
+.sidebar-brand{display:flex;align-items:center;gap:.8rem;padding:1.5rem 1.2rem;border-bottom:1px solid rgba(200,168,75,.1);flex-shrink:0}
+.sb-brand-icon{font-size:1.4rem;flex-shrink:0}
+.sidebar-brand-text{white-space:nowrap;overflow:hidden}
+.sidebar-brand-title{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ivory);line-height:1.2}
+.sidebar-brand-sub{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sb-nav{flex:1;overflow-y:auto;padding:.8rem 0}
+.sb-nav::-webkit-scrollbar{width:3px}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--border)}
+.sb-section-label{font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(138,154,181,.4);padding:.8rem 1.2rem .3rem;transition:opacity .3s}
+.sb-item{display:flex;align-items:center;gap:.85rem;padding:.72rem 1.2rem;text-decoration:none;color:var(--muted);font-size:.82rem;transition:color .2s,background .2s;position:relative;white-space:nowrap}
+.sb-item:hover{color:var(--gold);background:rgba(200,168,75,.06)}
+.sb-item.active{color:var(--gold);background:rgba(200,168,75,.1)}
+.sb-item.active::before{content:'';position:absolute;left:0;top:0;height:100%;width:3px;background:var(--gold)}
+.sb-icon{font-size:1rem;flex-shrink:0;width:18px;text-align:center}
+.sb-label{transition:opacity .3s}
+.sb-badge{margin-left:auto;background:var(--crimson);color:#fff;font-size:.55rem;font-weight:600;padding:.15rem .45rem;border-radius:10px;flex-shrink:0}
+.sb-toggle{padding:1rem 1.2rem;border-top:1px solid rgba(200,168,75,.1);display:flex;justify-content:center}
+.sb-toggle-btn{background:none;border:1px solid var(--border-w);color:var(--muted);padding:.4rem .8rem;font-size:.7rem;cursor:pointer;transition:color .2s,border-color .2s}
+.sb-toggle-btn:hover{color:var(--gold);border-color:var(--gold)}
+
+/* MAIN */
+.admin-main{margin-left:240px;flex:1;transition:margin-left .3s;min-height:100vh;display:flex;flex-direction:column}
+.admin-sidebar.collapsed ~ .admin-main{margin-left:60px}
+
+/* TOP BAR */
+.admin-topbar{background:#070e17;border-bottom:1px solid rgba(200,168,75,.1);padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;flex-shrink:0}
+.tb-left{display:flex;align-items:center;gap:1rem}
+.tb-page-title{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--ivory)}
+.tb-breadcrumb{font-size:.68rem;color:var(--muted)}
+.tb-right{display:flex;align-items:center;gap:.8rem}
+.tb-search{background:rgba(255,255,255,.04);border:1px solid var(--border-w);padding:.5rem 1rem;font-family:var(--body);font-size:.78rem;color:var(--ivory);outline:none;width:220px;transition:border-color .25s}
+.tb-search:focus{border-color:var(--gold)}
+.tb-search::placeholder{color:rgba(138,154,181,.4)}
+.tb-icon-btn{width:34px;height:34px;border:1px solid var(--border-w);background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s;position:relative}
+.tb-icon-btn:hover{color:var(--gold);border-color:var(--gold)}
+.tb-notif-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--crimson)}
+.tb-avatar{width:34px;height:34px;border-radius:50%;background:var(--navy-lite);border:1px solid var(--gold);overflow:hidden;cursor:pointer}
+.tb-avatar .ap{width:100%;height:100%}
+.tb-user-info{text-align:right}
+.tb-user-name{font-size:.78rem;color:var(--ivory);font-weight:500}
+.tb-user-role{font-size:.62rem;color:var(--gold)}
+
+/* CONTENT */
+.admin-content{padding:2rem;flex:1}
+
+/* TAB PANELS */
+.admin-panel{display:none}
+.admin-panel.active{display:block}
+
+/* STAT CARDS */
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:2rem}
+.stat-card{background:var(--navy-mid);border:1px solid var(--border-w);padding:1.5rem;transition:border-color .3s,transform .3s}
+.stat-card:hover{border-color:var(--border);transform:translateY(-2px)}
+.sc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem}
+.sc-icon{font-size:1.4rem}
+.sc-trend{font-size:.65rem;padding:.2rem .5rem;border-radius:2px;font-weight:500}
+.sc-trend.up{background:rgba(42,122,80,.2);color:#5dd99a}
+.sc-trend.down{background:rgba(139,26,26,.2);color:var(--red-lite)}
+.sc-value{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--ivory);line-height:1}
+.sc-label{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+.sc-sub{font-size:.7rem;color:rgba(138,154,181,.5);margin-top:.25rem}
+canvas.sparkline{width:100%!important;height:40px!important;margin-top:.8rem;display:block}
+
+/* CHARTS ROW */
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;margin-bottom:2rem}
+.chart-card{background:var(--navy-mid);border:1px solid var(--border-w);padding:1.5rem}
+.chart-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.chart-card-title{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ivory)}
+.chart-period-tabs{display:flex;gap:0;border:1px solid var(--border-w)}
+.cp-tab{padding:.3rem .75rem;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:none;border:none;border-right:1px solid var(--border-w);color:var(--muted);cursor:pointer;transition:all .2s}
+.cp-tab:last-child{border-right:none}
+.cp-tab.active{background:var(--crimson);color:var(--ivory)}
+.bar-chart{display:flex;align-items:flex-end;gap:.4rem;height:130px;padding-top:1rem}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.bar{width:100%;background:linear-gradient(to top,var(--crimson),var(--red-lite));border-radius:1px 1px 0 0;transition:height .8s ease;min-height:4px}
+.bar:hover{filter:brightness(1.2)}
+.bar-lbl{font-size:.58rem;color:var(--muted);text-align:center}
+
+/* DONUT */
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;padding:.5rem 0}
+.donut-svg{flex-shrink:0}
+.donut-legend{display:flex;flex-direction:column;gap:.6rem}
+.dl-item{display:flex;align-items:center;gap:.6rem;font-size:.75rem;color:var(--muted)}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* TABLES */
+.admin-table-card{background:var(--navy-mid);border:1px solid var(--border-w);margin-bottom:1.5rem;overflow:hidden}
+.atc-header{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 1.5rem;border-bottom:1px solid var(--border-w)}
+.atc-title{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ivory)}
+.atc-actions{display:flex;gap:.6rem}
+table{width:100%;border-collapse:collapse}
+th{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-w);white-space:nowrap;background:rgba(255,255,255,.015)}
+td{font-size:.8rem;color:var(--muted);padding:.75rem 1rem;border-bottom:1px solid rgba(247,243,238,.04)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.018);color:var(--ivory)}
+.td-strong{color:var(--ivory);font-weight:500}
+.td-gold{color:var(--gold)}
+.status-badge{display:inline-block;padding:.18rem .6rem;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;border-radius:2px}
+.status-completed{background:rgba(42,122,80,.2);color:#5dd99a}
+.status-pending{background:rgba(200,168,75,.15);color:var(--gold)}
+.status-processing{background:rgba(30,50,80,.5);color:#7bb3e0}
+.status-cancelled{background:rgba(139,26,26,.2);color:var(--red-lite)}
+.status-active{background:rgba(42,122,80,.2);color:#5dd99a}
+.status-review{background:rgba(200,168,75,.15);color:var(--gold)}
+.status-inactive{background:rgba(100,100,100,.2);color:var(--muted)}
+.td-actions{display:flex;gap:.4rem}
+.act-btn{padding:.3rem .65rem;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:1px solid var(--border-w);color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+.act-btn:hover{color:var(--gold);border-color:var(--gold)}
+.act-btn.danger:hover{color:var(--red-lite);border-color:var(--red-lite)}
+
+/* QUICK ACTIONS */
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.qa-card{background:var(--navy-mid);border:1px solid var(--border-w);padding:1.2rem 1rem;text-align:center;cursor:pointer;transition:border-color .3s,transform .3s,background .3s;text-decoration:none;display:block}
+.qa-card:hover{border-color:var(--gold);transform:translateY(-2px);background:rgba(200,168,75,.04)}
+.qa-icon{font-size:1.5rem;margin-bottom:.6rem}
+.qa-label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .3s}
+.qa-card:hover .qa-label{color:var(--gold)}
+
+/* ACTIVITY FEED */
+.activity-feed{background:var(--navy-mid);border:1px solid var(--border-w);padding:1.5rem;margin-bottom:1.5rem}
+.activity-item{display:flex;align-items:flex-start;gap:1rem;padding:.75rem 0;border-bottom:1px solid rgba(247,243,238,.04)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:.4rem}
+.dot-sale{background:#5dd99a}
+.dot-artist{background:var(--gold)}
+.dot-order{background:#7bb3e0}
+.dot-alert{background:var(--red-lite)}
+.activity-text{font-size:.8rem;color:var(--muted);line-height:1.6;flex:1}
+.activity-text strong{color:var(--ivory)}
+.activity-time{font-size:.65rem;color:rgba(138,154,181,.4);flex-shrink:0;white-space:nowrap}
+
+/* FORMS IN ADMIN */
+.admin-form{background:var(--navy-mid);border:1px solid var(--border-w);padding:2rem}
+.admin-form h3{font-family:var(--serif);font-size:1.2rem;font-weight:700;margin-bottom:.4rem;color:var(--ivory)}
+.admin-form .sub{font-size:.78rem;color:var(--muted);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border-w)}
+.admin-form .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+
+/* 2-col layout for settings etc */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.settings-section{background:var(--navy-mid);border:1px solid var(--border-w);padding:1.5rem;margin-bottom:1.2rem}
+.settings-section h4{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-w)}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:.7rem 0;border-bottom:1px solid rgba(247,243,238,.04)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:.82rem;color:var(--ivory)}
+.setting-desc{font-size:.7rem;color:var(--muted);margin-top:.15rem}
+.toggle-switch{width:40px;height:22px;background:var(--border-w);border-radius:11px;cursor:pointer;position:relative;transition:background .25s;flex-shrink:0}
+.toggle-switch.on{background:var(--gold)}
+.toggle-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .25s}
+.toggle-switch.on .toggle-knob{transform:translateX(18px)}
+
+@media(max-width:1100px){.stat-cards{grid-template-columns:1fr 1fr}.charts-row{grid-template-columns:1fr}.quick-actions{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.admin-sidebar{width:60px}.admin-sidebar .sb-label,.admin-sidebar .sidebar-brand-text,.admin-sidebar .sb-section-label{opacity:0;pointer-events:none}.admin-main{margin-left:60px}.admin-content{padding:1rem}.stat-cards{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="admin-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <div class="sidebar-brand">
+      <span class="sb-brand-icon">🎨</span>
+      <div class="sidebar-brand-text">
+        <div class="sidebar-brand-title">Nepaliकला</div>
+        <div class="sidebar-brand-sub">Admin Panel</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section-label">Overview</div>
+      <a href="#" class="sb-item active" onclick="showPanel('dashboard',this)"><span class="sb-icon">📊</span><span class="sb-label">Dashboard</span></a>
+      <a href="#" class="sb-item" onclick="showPanel('analytics',this)"><span class="sb-icon">📈</span><span class="sb-label">Analytics</span></a>
+      <div class="sb-section-label">Commerce</div>
+      <a href="#" class="sb-item" onclick="showPanel('orders',this)"><span class="sb-icon">🛒</span><span class="sb-label">Orders</span><span class="sb-badge">12</span></a>
+      <a href="#" class="sb-item" onclick="showPanel('artworks',this)"><span class="sb-icon">🖼</span><span class="sb-label">Artworks</span></a>
+      <a href="#" class="sb-item" onclick="showPanel('categories-admin',this)"><span class="sb-icon">🏷</span><span class="sb-label">Categories</span></a>
+      <div class="sb-section-label">Community</div>
+      <a href="#" class="sb-item" onclick="showPanel('artists-admin',this)"><span class="sb-icon">👤</span><span class="sb-label">Artists</span></a>
+      <a href="#" class="sb-item" onclick="showPanel('applications',this)"><span class="sb-icon">📋</span><span class="sb-label">Applications</span><span class="sb-badge">5</span></a>
+      <a href="#" class="sb-item" onclick="showPanel('partnerships',this)"><span class="sb-icon">🤝</span><span class="sb-label">Partnerships</span></a>
+      <div class="sb-section-label">Content</div>
+      <a href="#" class="sb-item" onclick="showPanel('blog-admin',this)"><span class="sb-icon">📝</span><span class="sb-label">Stories / Blog</span></a>
+      <a href="#" class="sb-item" onclick="showPanel('media',this)"><span class="sb-icon">🗂</span><span class="sb-label">Media Library</span></a>
+      <div class="sb-section-label">System</div>
+      <a href="#" class="sb-item" onclick="showPanel('settings',this)"><span class="sb-icon">⚙</span><span class="sb-label">Settings</span></a>
+      <a href="#" class="sb-item" onclick="showPanel('users-admin',this)"><span class="sb-icon">👥</span><span class="sb-label">Admin Users</span></a>
+      <a href="/" class="sb-item" target="_blank"><span class="sb-icon">🌐</span><span class="sb-label">View Website ↗</span></a>
+    </nav>
+    <div class="sb-toggle">
+      <button class="sb-toggle-btn" id="sidebar-toggle">☰</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="admin-main" id="admin-main">
+    <!-- TOPBAR -->
+    <div class="admin-topbar">
+      <div class="tb-left">
+        <div>
+          <div class="tb-page-title" id="tb-title">Dashboard</div>
+          <div class="tb-breadcrumb">Admin / <span id="tb-bc">Overview</span></div>
+        </div>
+      </div>
+      <div class="tb-right">
+        <input class="tb-search" type="text" placeholder="Search orders, artists, works…"/>
+        <button class="tb-icon-btn" title="Notifications" onclick="NK&&NK.showToast('Notifications','🔔','You have 3 new orders and 5 applications.')">
+          🔔<span class="tb-notif-dot"></span>
+        </button>
+        <button class="tb-icon-btn" title="Export" onclick="NK&&NK.showToast('Export','📊','Report export queued.')">📊</button>
+        <div>
+          <div class="tb-user-name">Admin</div>
+          <div class="tb-user-role">Super Admin</div>
+        </div>
+        <div class="tb-avatar"><div class="ap ap8"></div></div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="admin-content">
+
+      <!-- ══════════ DASHBOARD ══════════ -->
+      <div class="admin-panel active" id="panel-dashboard">
+        <!-- Quick actions -->
+        <div class="quick-actions">
+          <a href="#" class="qa-card" onclick="showPanel('artworks',null);return false"><div class="qa-icon">➕</div><div class="qa-label">Add Artwork</div></a>
+          <a href="#" class="qa-card" onclick="showPanel('applications',null);return false"><div class="qa-icon">📋</div><div class="qa-label">Review Applications <span style="color:var(--red-lite);font-size:.7rem">(5)</span></div></a>
+          <a href="#" class="qa-card" onclick="showPanel('orders',null);return false"><div class="qa-icon">📦</div><div class="qa-label">Process Orders <span style="color:var(--red-lite);font-size:.7rem">(12)</span></div></a>
+          <a href="#" class="qa-card" onclick="showPanel('blog-admin',null);return false"><div class="qa-icon">✏</div><div class="qa-label">New Story</div></a>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="sc-header"><span class="sc-icon">💰</span><span class="sc-trend up">▲ 14%</span></div>
+            <div class="sc-value">NPR 8.4L</div>
+            <div class="sc-label">Revenue This Month</div>
+            <div class="sc-sub">vs NPR 7.3L last month</div>
+            <canvas id="chart-revenue" class="sparkline"></canvas>
+          </div>
+          <div class="stat-card">
+            <div class="sc-header"><span class="sc-icon">🛒</span><span class="sc-trend up">▲ 22%</span></div>
+            <div class="sc-value">186</div>
+            <div class="sc-label">Orders This Month</div>
+            <div class="sc-sub">28 pending action</div>
+            <canvas id="chart-orders" class="sparkline"></canvas>
+          </div>
+          <div class="stat-card">
+            <div class="sc-header"><span class="sc-icon">👤</span><span class="sc-trend up">▲ 8%</span></div>
+            <div class="sc-value">120</div>
+            <div class="sc-label">Active Artists</div>
+            <div class="sc-sub">5 new applications</div>
+            <canvas id="chart-artists" class="sparkline"></canvas>
+          </div>
+          <div class="stat-card">
+            <div class="sc-header"><span class="sc-icon">🌍</span><span class="sc-trend up">▲ 5%</span></div>
+            <div class="sc-value">42</div>
+            <div class="sc-label">Countries This Month</div>
+            <div class="sc-sub">Top: US, UK, Germany</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-card-title">Monthly Revenue (NPR)</div>
+              <div class="chart-period-tabs">
+                <button class="cp-tab active" onclick="periodTab(this)">6M</button>
+                <button class="cp-tab" onclick="periodTab(this)">1Y</button>
+                <button class="cp-tab" onclick="periodTab(this)">All</button>
+              </div>
+            </div>
+            <div class="bar-chart" id="bar-chart"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header"><div class="chart-card-title">Sales by Category</div></div>
+            <div class="donut-wrap">
+              <svg class="donut-svg" viewBox="0 0 80 80" width="130" height="130">
+                <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="12"/>
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#8b1a1a" stroke-width="12" stroke-dasharray="66 122" stroke-dashoffset="-20" stroke-linecap="butt"/>
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#c8a84b" stroke-width="12" stroke-dasharray="40 122" stroke-dashoffset="-86" stroke-linecap="butt"/>
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#3a6fc4" stroke-width="12" stroke-dasharray="30 122" stroke-dashoffset="-126" stroke-linecap="butt"/>
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#5c1a5c" stroke-width="12" stroke-dasharray="22 122" stroke-dashoffset="-156" stroke-linecap="butt"/>
+                <text x="40" y="44" text-anchor="middle" fill="#f7f3ee" font-size="9" font-family="serif">NPR 8.4L</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="dl-item"><span class="dl-dot" style="background:#8b1a1a"></span>Thangka 35%</div>
+                <div class="dl-item"><span class="dl-dot" style="background:#c8a84b"></span>Modern 21%</div>
+                <div class="dl-item"><span class="dl-dot" style="background:#3a6fc4"></span>Photography 16%</div>
+                <div class="dl-item"><span class="dl-dot" style="background:#5c1a5c"></span>Digital 12%</div>
+                <div class="dl-item"><span class="dl-dot" style="background:var(--navy-lite)"></span>Others 16%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="admin-table-card">
+          <div class="atc-header">
+            <div class="atc-title">Recent Orders</div>
+            <div class="atc-actions"><button class="act-btn" onclick="showPanel('orders',null)">View All</button></div>
+          </div>
+          <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Order ID</th><th>Customer</th><th>Artwork</th><th>Artist</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-gold">#ORD-1042</td><td class="td-strong">Anna M. (Germany)</td><td>Himalayan Dawn Thangka</td><td>Karma Lama</td><td class="td-gold">NPR 85,000</td><td><span class="status-badge status-processing">Processing</span></td><td>Mar 19, 2025</td><td class="td-actions"><button class="act-btn" onclick="NK&&NK.showToast('Order #1042','📦','Order details opened.')">View</button><button class="act-btn" onclick="NK&&NK.showToast('Shipped','✈','Marked as shipped.')">Ship</button></td></tr>
+              <tr><td class="td-gold">#ORD-1041</td><td class="td-strong">John T. (UK)</td><td>Pokhara Lakeside Print</td><td>Sita Maharjan</td><td class="td-gold">NPR 4,500</td><td><span class="status-badge status-completed">Completed</span></td><td>Mar 18, 2025</td><td class="td-actions"><button class="act-btn" onclick="NK&&NK.showToast('Order #1041','✔','Completed.')">View</button></td></tr>
+              <tr><td class="td-gold">#ORD-1040</td><td class="td-strong">Priya S. (India)</td><td>Janakpur Festivity</td><td>Geeta Devi</td><td class="td-gold">NPR 28,000</td><td><span class="status-badge status-pending">Pending</span></td><td>Mar 17, 2025</td><td class="td-actions"><button class="act-btn">View</button><button class="act-btn" onclick="NK&&NK.showToast('Confirmed','✔','Payment confirmed.')">Confirm</button></td></tr>
+              <tr><td class="td-gold">#ORD-1039</td><td class="td-strong">Michael R. (USA)</td><td>Everest Spirit Print</td><td>Anil Tamang</td><td class="td-gold">NPR 2,800</td><td><span class="status-badge status-completed">Completed</span></td><td>Mar 16, 2025</td><td class="td-actions"><button class="act-btn">View</button></td></tr>
+              <tr><td class="td-gold">#ORD-1038</td><td class="td-strong">Sophie L. (France)</td><td>Sacred Mandala</td><td>Karma Lama</td><td class="td-gold">NPR 1,20,000</td><td><span class="status-badge status-processing">Processing</span></td><td>Mar 15, 2025</td><td class="td-actions"><button class="act-btn">View</button><button class="act-btn">Ship</button></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+
+        <!-- Activity + New Artists -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+          <div>
+            <div class="atc-header" style="background:var(--navy-mid);border:1px solid var(--border-w);border-bottom:1px solid var(--border-w);padding:1rem 1.5rem"><div class="atc-title">Live Activity</div></div>
+            <div class="activity-feed" style="border-top:none">
+              <div class="activity-item"><span class="activity-dot dot-sale"></span><div class="activity-text"><strong>New sale</strong> — Sacred Mandala sold to collector in Switzerland</div><span class="activity-time">2m ago</span></div>
+              <div class="activity-item"><span class="activity-dot dot-artist"></span><div class="activity-text"><strong>Application</strong> — New artist application from Pokhara</div><span class="activity-time">14m ago</span></div>
+              <div class="activity-item"><span class="activity-dot dot-order"></span><div class="activity-text"><strong>Order shipped</strong> — #ORD-1035 dispatched to UK</div><span class="activity-time">1h ago</span></div>
+              <div class="activity-item"><span class="activity-dot dot-sale"></span><div class="activity-text"><strong>New sale</strong> — Pokhara Lakeside Print · USA</div><span class="activity-time">2h ago</span></div>
+              <div class="activity-item"><span class="activity-dot dot-alert"></span><div class="activity-text"><strong>Low stock</strong> — Everest Spirit print: 3 remaining</div><span class="activity-time">3h ago</span></div>
+              <div class="activity-item"><span class="activity-dot dot-artist"></span><div class="activity-text"><strong>Partnership enquiry</strong> — Dwarika's Hotels submitted form</div><span class="activity-time">5h ago</span></div>
+            </div>
+          </div>
+          <div class="admin-table-card">
+            <div class="atc-header"><div class="atc-title">Top Artists This Month</div><button class="act-btn" onclick="showPanel('artists-admin',null)">All Artists</button></div>
+            <table>
+              <thead><tr><th>Artist</th><th>Sales</th><th>Revenue</th></tr></thead>
+              <tbody>
+                <tr><td class="td-strong">Karma Lama</td><td>8</td><td class="td-gold">NPR 2.4L</td></tr>
+                <tr><td class="td-strong">Priya Gurung</td><td>22</td><td class="td-gold">NPR 1.8L</td></tr>
+                <tr><td class="td-strong">Geeta Devi</td><td>11</td><td class="td-gold">NPR 1.2L</td></tr>
+                <tr><td class="td-strong">Sita Maharjan</td><td>6</td><td class="td-gold">NPR 98,000</td></tr>
+                <tr><td class="td-strong">Anil Tamang</td><td>18</td><td class="td-gold">NPR 72,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ ORDERS ══════════ -->
+      <div class="admin-panel" id="panel-orders">
+        <div style="display:flex;gap:.8rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center">
+          <input class="tb-search" type="text" placeholder="Search orders…" style="flex:1;max-width:300px"/>
+          <select style="background:rgba(255,255,255,.04);border:1px solid var(--border-w);color:var(--ivory);padding:.5rem 1rem;font-size:.75rem;outline:none"><option>All Status</option><option>Pending</option><option>Processing</option><option>Completed</option><option>Cancelled</option></select>
+          <button class="btn btn-primary btn-sm" onclick="NK&&NK.showToast('Export','📊','Orders CSV exported.')">Export CSV</button>
+        </div>
+        <div class="admin-table-card">
+          <div class="atc-header"><div class="atc-title">All Orders (186)</div></div>
+          <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Order ID</th><th>Customer</th><th>Country</th><th>Artwork</th><th>Type</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-gold">#ORD-1042</td><td class="td-strong">Anna Mueller</td><td>🇩🇪 Germany</td><td>Himalayan Dawn</td><td>Original</td><td class="td-gold">85,000</td><td><span class="status-badge status-processing">Processing</span></td><td>Mar 19</td><td class="td-actions"><button class="act-btn">View</button><button class="act-btn">Ship</button></td></tr>
+              <tr><td class="td-gold">#ORD-1041</td><td class="td-strong">John Taylor</td><td>🇬🇧 UK</td><td>Pokhara Lakeside</td><td>Print</td><td class="td-gold">4,500</td><td><span class="status-badge status-completed">Completed</span></td><td>Mar 18</td><td class="td-actions"><button class="act-btn">View</button></td></tr>
+              <tr><td class="td-gold">#ORD-1040</td><td class="td-strong">Priya Sharma</td><td>🇮🇳 India</td><td>Janakpur Festivity</td><td>Original</td><td class="td-gold">28,000</td><td><span class="status-badge status-pending">Pending</span></td><td>Mar 17</td><td class="td-actions"><button class="act-btn">View</button><button class="act-btn">Confirm</button></td></tr>
+              <tr><td class="td-gold">#ORD-1039</td><td class="td-strong">Michael Ross</td><td>🇺🇸 USA</td><td>Everest Spirit</td><td>Print</td><td class="td-gold">2,800</td><td><span class="status-badge status-completed">Completed</span></td><td>Mar 16</td><td class="td-actions"><button class="act-btn">View</button></td></tr>
+              <tr><td class="td-gold">#ORD-1038</td><td class="td-strong">Sophie Laurent</td><td>🇫🇷 France</td><td>Sacred Mandala</td><td>Original</td><td class="td-gold">1,20,000</td><td><span class="status-badge status-processing">Processing</span></td><td>Mar 15</td><td class="td-actions"><button class="act-btn">View</button><button class="act-btn">Ship</button></td></tr>
+              <tr><td class="td-gold">#ORD-1037</td><td class="td-strong">Tanaka Yuki</td><td>🇯🇵 Japan</td><td>Green Tara</td><td>Original</td><td class="td-gold">1,40,000</td><td><span class="status-badge status-completed">Completed</span></td><td>Mar 14</td><td class="td-actions"><button class="act-btn">View</button></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ ARTWORKS ══════════ -->
+      <div class="admin-panel" id="panel-artworks">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+          <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+            <input class="tb-search" type="text" placeholder="Search artworks…" style="width:220px"/>
+            <select style="background:rgba(255,255,255,.04);border:1px solid var(--border-w);color:var(--ivory);padding:.5rem 1rem;font-size:.75rem;outline:none"><option>All Categories</option><option>Thangka</option><option>Modern</option><option>Madhubani</option></select>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="NK&&NK.showToast('Add Artwork','🎨','Use the form below to add a new artwork.')">+ Add Artwork</button>
+        </div>
+        <div class="admin-table-card">
+          <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>ID</th><th>Title</th><th>Artist</th><th>Category</th><th>Type</th><th>Price (NPR)</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>p1</td><td class="td-strong">Himalayan Dawn Thangka</td><td>Karma Lama</td><td>Thangka</td><td>Original</td><td class="td-gold">85,000</td><td>1</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><button class="act-btn">Edit</button><button class="act-btn danger">Delete</button></td></tr>
+              <tr><td>p2</td><td class="td-strong">Pokhara Lakeside</td><td>Sita Maharjan</td><td>Modern</td><td>Print</td><td class="td-gold">4,500</td><td>18/30</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><button class="act-btn">Edit</button><button class="act-btn danger">Delete</button></td></tr>
+              <tr><td>p3</td><td class="td-strong">Janakpur Festivity</td><td>Geeta Devi</td><td>Madhubani</td><td>Original</td><td class="td-gold">28,000</td><td>1</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><button class="act-btn">Edit</button><button class="act-btn danger">Delete</button></td></tr>
+              <tr><td>p4</td><td class="td-strong">Everest Spirit</td><td>Anil Tamang</td><td>Digital</td><td>Print</td><td class="td-gold">2,800</td><td>3/50</td><td><span class="status-badge status-review">Low Stock</span></td><td class="td-actions"><button class="act-btn">Edit</button><button class="act-btn danger">Delete</button></td></tr>
+              <tr><td>p5</td><td class="td-strong">Sacred Mandala</td><td>Karma Lama</td><td>Thangka</td><td>Original</td><td class="td-gold">1,20,000</td><td>1</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><button class="act-btn">Edit</button><button class="act-btn danger">Delete</button></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+        <div class="admin-form" style="margin-top:1.5rem">
+          <h3>Add New Artwork</h3>
+          <p class="sub">Fill in all required fields and upload high-quality images.</p>
+          <form class="js-form">
+            <div class="admin-form form-grid"><div class="form-group"><label>Title *</label><input type="text" placeholder="Artwork title" required/></div><div class="form-group"><label>Artist *</label><select required><option value="">Select artist…</option><option>Karma Lama</option><option>Sita Maharjan</option><option>Geeta Devi</option><option>Anil Tamang</option></select></div></div>
+            <div class="admin-form form-grid"><div class="form-group"><label>Category *</label><select required><option>Thangka</option><option>Modern</option><option>Madhubani</option><option>Sculpture</option><option>Digital</option><option>Photography</option></select></div><div class="form-group"><label>Type *</label><select required><option>Original</option><option>Print</option></select></div></div>
+            <div class="admin-form form-grid"><div class="form-group"><label>Price (NPR) *</label><input type="number" placeholder="85000" required/></div><div class="form-group"><label>Edition Size (prints only)</label><input type="number" placeholder="e.g. 30"/></div></div>
+            <div class="form-group" style="margin-bottom:1.2rem"><label>Medium &amp; Dimensions</label><input type="text" placeholder="e.g. Natural pigments on cotton · 60×80 cm"/></div>
+            <div class="form-group" style="margin-bottom:1.2rem"><label>Description</label><textarea placeholder="Describe the artwork…" style="min-height:80px"></textarea></div>
+            <button type="submit" class="btn btn-primary">Save Artwork</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ══════════ ARTISTS ADMIN ══════════ -->
+      <div class="admin-panel" id="panel-artists-admin">
+        <div class="admin-table-card">
+          <div class="atc-header"><div class="atc-title">All Artists (120)</div><div class="atc-actions"><input class="tb-search" type="text" placeholder="Search…" style="width:180px"/><button class="btn btn-primary btn-sm" onclick="NK&&NK.showToast('Invite','✉','Invite link copied.')">Invite Artist</button></div></div>
+          <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Name</th><th>Location</th><th>Style</th><th>Works</th><th>Total Sales</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-strong">Karma Lama</td><td>Kathmandu</td><td>Thangka</td><td>24</td><td class="td-gold">NPR 8.2L</td><td>Jan 2022</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><a href="artist-detail.html?id=1" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Sita Maharjan</td><td>Patan</td><td>Modern</td><td>18</td><td class="td-gold">NPR 3.4L</td><td>Mar 2022</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><a href="artist-detail.html?id=2" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Geeta Devi</td><td>Janakpur</td><td>Madhubani</td><td>31</td><td class="td-gold">NPR 5.1L</td><td>Jun 2022</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><a href="artist-detail.html?id=3" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Anil Tamang</td><td>Kathmandu</td><td>Digital</td><td>40</td><td class="td-gold">NPR 2.8L</td><td>Aug 2022</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><a href="artist-detail.html?id=4" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Rajan Shakya</td><td>Bhaktapur</td><td>Sculpture</td><td>12</td><td class="td-gold">NPR 1.9L</td><td>Nov 2022</td><td><span class="status-badge status-inactive">Inactive</span></td><td class="td-actions"><a href="artist-detail.html?id=5" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ APPLICATIONS ══════════ -->
+      <div class="admin-panel" id="panel-applications">
+        <div class="admin-table-card">
+          <div class="atc-header"><div class="atc-title">Artist Applications (5 pending)</div></div>
+          <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Name</th><th>Location</th><th>Style</th><th>Years</th><th>Portfolio</th><th>Applied</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-strong">Anita Shrestha</td><td>Pokhara</td><td>Watercolour</td><td>8 yrs</td><td><a href="#" style="color:var(--gold);font-size:.78rem">View ↗</a></td><td>Mar 19</td><td><span class="status-badge status-review">Pending</span></td><td class="td-actions"><button class="act-btn" onclick="NK&&NK.showToast('Approved','✔','Anita Shrestha approved.')">Approve</button><button class="act-btn danger" onclick="NK&&NK.showToast('Declined','✕','Application declined.')">Decline</button></td></tr>
+              <tr><td class="td-strong">Bikash Gurung</td><td>Chitwan</td><td>Digital</td><td>4 yrs</td><td><a href="#" style="color:var(--gold);font-size:.78rem">View ↗</a></td><td>Mar 18</td><td><span class="status-badge status-review">Pending</span></td><td class="td-actions"><button class="act-btn" onclick="NK&&NK.showToast('Approved','✔','Bikash Gurung approved.')">Approve</button><button class="act-btn danger">Decline</button></td></tr>
+              <tr><td class="td-strong">Laxmi Rai</td><td>Dharan</td><td>Madhubani</td><td>12 yrs</td><td><a href="#" style="color:var(--gold);font-size:.78rem">View ↗</a></td><td>Mar 17</td><td><span class="status-badge status-review">Pending</span></td><td class="td-actions"><button class="act-btn" onclick="NK&&NK.showToast('Approved','✔','Laxmi Rai approved.')">Approve</button><button class="act-btn danger">Decline</button></td></tr>
+              <tr><td class="td-strong">Tenzin Dorje</td><td>Kathmandu</td><td>Thangka</td><td>20 yrs</td><td><a href="#" style="color:var(--gold);font-size:.78rem">View ↗</a></td><td>Mar 16</td><td><span class="status-badge status-review">Pending</span></td><td class="td-actions"><button class="act-btn" onclick="NK&&NK.showToast('Approved','✔','Tenzin Dorje approved.')">Approve</button><button class="act-btn danger">Decline</button></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ CATEGORIES ══════════ -->
+      <div class="admin-panel" id="panel-categories-admin">
+        <div class="admin-table-card">
+          <div class="atc-header"><div class="atc-title">Art Categories</div><button class="btn btn-primary btn-sm" onclick="NK&&NK.showToast('Add Category','🏷','New category form below.')">+ Add Category</button></div>
+          <table>
+            <thead><tr><th>Name</th><th>Slug</th><th>Works</th><th>Visible</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-strong">Thangka</td><td>thangka</td><td>48</td><td><span class="status-badge status-active">Visible</span></td><td class="td-actions"><a href="category.html?cat=thangka" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Modern &amp; Contemporary</td><td>modern</td><td>134</td><td><span class="status-badge status-active">Visible</span></td><td class="td-actions"><a href="category.html?cat=modern" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Madhubani</td><td>madhubani</td><td>62</td><td><span class="status-badge status-active">Visible</span></td><td class="td-actions"><a href="category.html?cat=madhubani" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Sculpture &amp; Craft</td><td>sculpture</td><td>37</td><td><span class="status-badge status-active">Visible</span></td><td class="td-actions"><a href="category.html?cat=sculpture" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Digital Art</td><td>digital</td><td>29</td><td><span class="status-badge status-active">Visible</span></td><td class="td-actions"><a href="category.html?cat=digital" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Photography</td><td>photography</td><td>91</td><td><span class="status-badge status-active">Visible</span></td><td class="td-actions"><a href="category.html?cat=photography" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══════════ BLOG ADMIN ══════════ -->
+      <div class="admin-panel" id="panel-blog-admin">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem"><div class="atc-title" style="font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--ivory)">Stories (24 published)</div><button class="btn btn-primary btn-sm" onclick="NK&&NK.showToast('New Story','✏','Draft created.')">+ New Story</button></div>
+        <div class="admin-table-card">
+          <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Published</th><th>Views</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-strong">The Secrets of Thangka Pigments</td><td>Editorial</td><td>Tradition</td><td>Mar 15</td><td>1,842</td><td><span class="status-badge status-active">Live</span></td><td class="td-actions"><a href="blog.html" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button><button class="act-btn danger">Delete</button></td></tr>
+              <tr><td class="td-strong">Geeta Devi: Madhubani Lives</td><td>Editorial</td><td>Folk Art</td><td>Mar 8</td><td>984</td><td><span class="status-badge status-active">Live</span></td><td class="td-actions"><a href="blog.html" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button><button class="act-btn danger">Delete</button></td></tr>
+              <tr><td class="td-strong">Nepal's New Wave Artists</td><td>Guest</td><td>Contemporary</td><td>Feb 20</td><td>2,311</td><td><span class="status-badge status-active">Live</span></td><td class="td-actions"><a href="blog.html" class="act-btn" target="_blank">View</a><button class="act-btn">Edit</button><button class="act-btn danger">Delete</button></td></tr>
+              <tr><td class="td-strong">Bhaktapur Bronze Casters</td><td>Editorial</td><td>Craft</td><td>Draft</td><td>—</td><td><span class="status-badge status-review">Draft</span></td><td class="td-actions"><button class="act-btn">Edit</button><button class="act-btn" onclick="NK&&NK.showToast('Published','✔','Story is now live.')">Publish</button></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ ANALYTICS ══════════ -->
+      <div class="admin-panel" id="panel-analytics">
+        <div class="stat-cards">
+          <div class="stat-card"><div class="sc-header"><span class="sc-icon">👁</span><span class="sc-trend up">▲ 31%</span></div><div class="sc-value">48,200</div><div class="sc-label">Page Views (Month)</div></div>
+          <div class="stat-card"><div class="sc-header"><span class="sc-icon">🧑‍💻</span><span class="sc-trend up">▲ 18%</span></div><div class="sc-value">12,450</div><div class="sc-label">Unique Visitors</div></div>
+          <div class="stat-card"><div class="sc-header"><span class="sc-icon">⏱</span><span class="sc-trend up">▲ 6%</span></div><div class="sc-value">3m 42s</div><div class="sc-label">Avg. Session Duration</div></div>
+          <div class="stat-card"><div class="sc-header"><span class="sc-icon">📉</span><span class="sc-trend down">▼ 2%</span></div><div class="sc-value">42%</div><div class="sc-label">Bounce Rate</div></div>
+        </div>
+        <div class="admin-table-card">
+          <div class="atc-header"><div class="atc-title">Top Pages</div></div>
+          <table>
+            <thead><tr><th>Page</th><th>Views</th><th>Avg. Time</th><th>Conversions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-strong">Home ()</td><td>18,400</td><td>1m 12s</td><td class="td-gold">3.2%</td></tr>
+              <tr><td class="td-strong">Shop (shop.html)</td><td>9,800</td><td>4m 22s</td><td class="td-gold">6.8%</td></tr>
+              <tr><td class="td-strong">Product Detail</td><td>7,200</td><td>5m 10s</td><td class="td-gold">8.4%</td></tr>
+              <tr><td class="td-strong">Artists (artistinfo.html)</td><td>5,600</td><td>3m 44s</td><td class="td-gold">2.1%</td></tr>
+              <tr><td class="td-strong">Blog / Stories</td><td>4,100</td><td>6m 01s</td><td class="td-gold">1.4%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="admin-table-card">
+          <div class="atc-header"><div class="atc-title">Top Countries</div></div>
+          <table>
+            <thead><tr><th>Country</th><th>Sessions</th><th>Revenue</th><th>Avg. Order</th></tr></thead>
+            <tbody>
+              <tr><td>🇺🇸 United States</td><td>3,200</td><td class="td-gold">NPR 2.1L</td><td>NPR 14,200</td></tr>
+              <tr><td>🇬🇧 United Kingdom</td><td>1,800</td><td class="td-gold">NPR 1.4L</td><td>NPR 18,500</td></tr>
+              <tr><td>🇩🇪 Germany</td><td>1,200</td><td class="td-gold">NPR 1.1L</td><td>NPR 22,000</td></tr>
+              <tr><td>🇮🇳 India</td><td>2,100</td><td class="td-gold">NPR 85,000</td><td>NPR 8,200</td></tr>
+              <tr><td>🇯🇵 Japan</td><td>800</td><td class="td-gold">NPR 78,000</td><td>NPR 28,500</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══════════ PARTNERSHIPS ADMIN ══════════ -->
+      <div class="admin-panel" id="panel-partnerships">
+        <div class="admin-table-card">
+          <div class="atc-header"><div class="atc-title">Partnership Enquiries</div></div>
+          <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Organisation</th><th>Contact</th><th>Type</th><th>Budget</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-strong">Dwarika's Hotels</td><td>priya@dwarikas.com</td><td>Hospitality</td><td>NPR 5L+</td><td>Mar 19</td><td><span class="status-badge status-review">New</span></td><td class="td-actions"><button class="act-btn">View</button><button class="act-btn" onclick="NK&&NK.showToast('Contacted','✉','Follow-up email sent.')">Follow Up</button></td></tr>
+              <tr><td class="td-strong">Nepal Tourism Board</td><td>info@ntb.gov.np</td><td>Government</td><td>Discuss</td><td>Mar 15</td><td><span class="status-badge status-processing">In Progress</span></td><td class="td-actions"><button class="act-btn">View</button></td></tr>
+              <tr><td class="td-strong">Boudhanath Stupa Society</td><td>admin@boudha.org</td><td>Cultural NGO</td><td>Revenue share</td><td>Mar 10</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><button class="act-btn">View</button></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ SETTINGS ══════════ -->
+      <div class="admin-panel" id="panel-settings">
+        <div class="two-col">
+          <div>
+            <div class="settings-section">
+              <h4>Site Settings</h4>
+              <div class="setting-row"><div><div class="setting-label">Maintenance Mode</div><div class="setting-desc">Take the site offline for visitors</div></div><div class="toggle-switch" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+              <div class="setting-row"><div><div class="setting-label">New Artist Applications</div><div class="setting-desc">Accept new artist applications</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+              <div class="setting-row"><div><div class="setting-label">Print Programme</div><div class="setting-desc">Allow print orders</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+              <div class="setting-row"><div><div class="setting-label">Cart / Checkout</div><div class="setting-desc">Allow purchases</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+            </div>
+            <div class="settings-section">
+              <h4>Commission Settings</h4>
+              <div class="form-group" style="margin-bottom:1rem"><label>Artist Revenue Share (%)</label><input type="number" value="80" style="background:rgba(255,255,255,.04);border:1px solid var(--border-w);padding:.7rem 1rem;color:var(--ivory);outline:none;width:100%;transition:border-color .25s" /></div>
+              <div class="form-group"><label>Platform Fee (%)</label><input type="number" value="20" style="background:rgba(255,255,255,.04);border:1px solid var(--border-w);padding:.7rem 1rem;color:var(--ivory);outline:none;width:100%;transition:border-color .25s" /></div>
+              <button class="btn btn-primary btn-sm" style="margin-top:1.2rem" onclick="NK&&NK.showToast('Saved','✔','Commission settings updated.')">Save Changes</button>
+            </div>
+          </div>
+          <div>
+            <div class="settings-section">
+              <h4>Notifications</h4>
+              <div class="setting-row"><div><div class="setting-label">New Order Email</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+              <div class="setting-row"><div><div class="setting-label">Artist Application Email</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+              <div class="setting-row"><div><div class="setting-label">Low Stock Alert</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+              <div class="setting-row"><div><div class="setting-label">Daily Revenue Report</div></div><div class="toggle-switch" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+            </div>
+            <div class="settings-section">
+              <h4>Admin Access</h4>
+              <table style="margin-bottom:1rem">
+                <thead><tr><th>User</th><th>Role</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td class="td-strong">Super Admin</td><td>Super Admin</td><td><span class="status-badge status-active">Active</span></td></tr>
+                  <tr><td class="td-strong">Curator A</td><td>Editor</td><td><span class="status-badge status-active">Active</span></td></tr>
+                  <tr><td class="td-strong">Support B</td><td>Support</td><td><span class="status-badge status-inactive">Inactive</span></td></tr>
+                </tbody>
+              </table>
+              <button class="btn btn-outline btn-sm" onclick="NK&&NK.showToast('Invite','✉','Admin invite sent.')">+ Invite Admin</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ MEDIA ══════════ -->
+      <div class="admin-panel" id="panel-media">
+        <div style="display:flex;justify-content:space-between;margin-bottom:1.5rem"><div class="atc-title" style="font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--ivory)">Media Library</div><button class="btn btn-primary btn-sm" onclick="NK&&NK.showToast('Upload','📁','Click to select files.')">Upload Files</button></div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem">
+          <div style="aspect-ratio:1;overflow:hidden;border:1px solid var(--border-w);cursor:pointer;transition:border-color .25s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-w)'"><div class="ap ap8" style="width:100%;height:100%"></div></div>
+          <div style="aspect-ratio:1;overflow:hidden;border:1px solid var(--border-w);cursor:pointer;transition:border-color .25s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-w)'"><div class="ap ap2" style="width:100%;height:100%"></div></div>
+          <div style="aspect-ratio:1;overflow:hidden;border:1px solid var(--border-w);cursor:pointer;transition:border-color .25s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-w)'"><div class="ap ap3" style="width:100%;height:100%"></div></div>
+          <div style="aspect-ratio:1;overflow:hidden;border:1px solid var(--border-w);cursor:pointer;transition:border-color .25s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-w)'"><div class="ap ap5" style="width:100%;height:100%"></div></div>
+          <div style="aspect-ratio:1;overflow:hidden;border:1px solid var(--border-w);cursor:pointer;transition:border-color .25s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-w)'"><div class="ap ap7" style="width:100%;height:100%"></div></div>
+          <div style="aspect-ratio:1;overflow:hidden;border:1px solid var(--border-w);cursor:pointer;transition:border-color .25s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-w)'"><div class="ap ap6" style="width:100%;height:100%"></div></div>
+        </div>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:1rem">6 of 248 files shown. <a href="#" style="color:var(--gold)">Load more</a></p>
+      </div>
+
+      <!-- ══════════ USERS ADMIN ══════════ -->
+      <div class="admin-panel" id="panel-users-admin">
+        <div class="admin-table-card">
+          <div class="atc-header"><div class="atc-title">Admin Users</div><button class="btn btn-primary btn-sm" onclick="NK&&NK.showToast('Invite','✉','Invite email sent.')">+ Invite User</button></div>
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Last Login</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td class="td-strong">Super Admin</td><td>admin@nepalikala.art</td><td class="td-gold">Super Admin</td><td>Today, 10:22am</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><button class="act-btn">Edit</button></td></tr>
+              <tr><td class="td-strong">Curator A</td><td>curator@nepalikala.art</td><td>Editor</td><td>Yesterday</td><td><span class="status-badge status-active">Active</span></td><td class="td-actions"><button class="act-btn">Edit</button><button class="act-btn danger">Remove</button></td></tr>
+              <tr><td class="td-strong">Support B</td><td>support@nepalikala.art</td><td>Support</td><td>Mar 10</td><td><span class="status-badge status-inactive">Inactive</span></td><td class="td-actions"><button class="act-btn">Edit</button><button class="act-btn danger">Remove</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </div><!-- /admin-main -->
+</div><!-- /admin-shell -->
+
+<script src="script.js"></script>
+<script>
+/* ── PANEL NAVIGATION ── */
+function showPanel(id, clickedItem){
+  document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
+  const panel=document.getElementById('panel-'+id);
+  if(panel)panel.classList.add('active');
+  // update sidebar active
+  if(clickedItem){
+    document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+    clickedItem.classList.add('active');
+  }
+  // update topbar title
+  const titles={dashboard:'Dashboard',orders:'Orders',artworks:'Artworks','categories-admin':'Categories','artists-admin':'Artists',applications:'Applications',partnerships:'Partnerships','blog-admin':'Stories / Blog',media:'Media Library',settings:'Settings','users-admin':'Admin Users',analytics:'Analytics'};
+  const t=titles[id]||'Dashboard';
+  document.getElementById('tb-title').textContent=t;
+  document.getElementById('tb-bc').textContent=t;
+  return false;
+}
+
+/* ── BAR CHART ── */
+function buildBarChart(){
+  const data=[42,55,48,72,68,85,90,78,95,110,105,122];
+  const labels=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const max=Math.max(...data);
+  const el=document.getElementById('bar-chart');
+  if(!el)return;
+  el.innerHTML=data.map((v,i)=>`
+    <div class="bar-wrap" title="${labels[i]}: NPR ${v}k">
+      <div class="bar" style="height:${(v/max)*100}%" title="${v}"></div>
+      <div class="bar-lbl">${labels[i]}</div>
+    </div>`).join('');
+  // animate on load
+  requestAnimationFrame(()=>{
+    el.querySelectorAll('.bar').forEach((b,i)=>{
+      const h=b.style.height;b.style.height='0';
+      setTimeout(()=>b.style.height=h,50+i*40);
+    });
+  });
+}
+buildBarChart();
+
+/* ── SPARKLINES ── */
+function drawSparkline(id,data,color){
+  const canvas=document.getElementById(id);
+  if(!canvas)return;
+  const W=canvas.offsetWidth||200,H=44;
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  const max=Math.max(...data),min=Math.min(...data),range=max-min||1;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.beginPath();
+  data.forEach((v,i)=>{
+    const x=(i/(data.length-1))*W;
+    const y=H-((v-min)/range)*(H-8)-4;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  const lastX=W,lastY=H-((data[data.length-1]-min)/range)*(H-8)-4;
+  ctx.lineTo(lastX,H);ctx.lineTo(0,H);
+  ctx.fillStyle=color.replace(')',', 0.1)').replace('rgb','rgba')||'rgba(200,168,75,0.1)';
+  ctx.closePath();ctx.fill();
+}
+setTimeout(()=>{
+  drawSparkline('chart-revenue',[42,55,48,72,68,85,90,78,95,110,105,122],'rgb(200,168,75)');
+  drawSparkline('chart-orders',[8,12,9,15,14,18,20,17,22,25,23,28],'rgb(201,48,48)');
+  drawSparkline('chart-artists',[30,35,40,45,50,58,65,70,80,90,100,120],'rgb(91,141,217)');
+},100);
+
+/* ── PERIOD TAB ── */
+function periodTab(btn){
+  btn.closest('.chart-period-tabs').querySelectorAll('.cp-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // Re-randomise bars for feel
+  const bar=document.getElementById('bar-chart');
+  if(!bar)return;
+  const items=bar.querySelectorAll('.bar');
+  const max=130;
+  items.forEach(b=>{b.style.height='0';setTimeout(()=>{b.style.height=Math.floor(Math.random()*70+30)+'%'},80)});
+}
+
+/* ── SIDEBAR COLLAPSE ── */
+document.getElementById('sidebar-toggle')?.addEventListener('click',function(){
+  const sb=document.getElementById('admin-sidebar');
+  sb.classList.toggle('collapsed');
+});
+</script>
+</body>
+</html>

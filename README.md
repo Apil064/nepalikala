@@ -1,0 +1,1 @@
+this is the website for local nepali artists to sell their artifacts digitally to many palces across the world to expand their sales and for profits if you are a artist you can enroll and make a page where you can sell your artifacts relaibly and easily.

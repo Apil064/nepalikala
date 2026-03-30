@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Artists — Nepaliकला</title>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+.filter-bar{display:flex;gap:.5rem;padding:1.5rem 4rem;background:var(--navy-mid);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;position:sticky;top:60px;z-index:99}
+.filter-label{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-right:.4rem}
+.filter-btn{padding:.4rem 1.1rem;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:1px solid var(--border-w);color:var(--muted);cursor:pointer;transition:all .25s}
+.filter-btn.active{background:var(--crimson);border-color:var(--crimson);color:var(--ivory)}
+.filter-btn:hover:not(.active){border-color:var(--gold);color:var(--gold)}
+/* spotlight */
+.spotlight-section{padding:5rem 4rem;background:var(--navy-mid);border-bottom:1px solid var(--border);position:relative;z-index:1}
+.spotlight-inner{display:grid;grid-template-columns:1fr 1.3fr;gap:4.5rem;align-items:center}
+.spotlight-art{aspect-ratio:3/4;overflow:hidden;border:1px solid var(--border)}
+.spotlight-art .ap{width:100%;height:100%;min-height:380px}
+.spotlight-quote{border-left:3px solid var(--gold);padding:1.2rem 1.5rem;background:rgba(200,168,75,.05);font-family:var(--serif);font-style:italic;color:var(--gold-lite);font-size:1.05rem;line-height:1.6;margin:1.5rem 0}
+.mini-works{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1.5rem}
+.mini-work{aspect-ratio:1;overflow:hidden;border:1px solid var(--border-w);transition:border-color .25s;display:block}
+.mini-work:hover{border-color:var(--gold)}
+.mini-work .ap{width:100%;height:100%;transition:transform .4s}
+.mini-work:hover .ap{transform:scale(1.08)}
+/* grid */
+.artists-section{padding:4rem 4rem 6rem;background:var(--navy);position:relative;z-index:1}
+.artist-grid-main{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+/* profile card */
+.apc{background:var(--navy-card);border:1px solid var(--border-w);overflow:hidden;transition:border-color .35s,transform .35s,box-shadow .35s}
+.apc:hover{border-color:rgba(200,168,75,.4);transform:translateY(-4px);box-shadow:var(--shadow)}
+.apc-banner{aspect-ratio:16/7;overflow:hidden;position:relative}
+.apc-banner .ap{width:100%;height:100%;min-height:120px;transition:transform .5s}
+.apc:hover .apc-banner .ap{transform:scale(1.04)}
+.apc-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(13,27,42,.95) 100%)}
+.apc-avatar-row{display:flex;align-items:flex-end;gap:.9rem;padding:0 1.2rem;margin-top:-2.2rem;position:relative;z-index:2}
+.apc-avatar{width:58px;height:58px;border-radius:50%;border:2px solid var(--gold);overflow:hidden;flex-shrink:0;background:var(--navy-lite)}
+.apc-avatar .ap{width:100%;height:100%}
+.apc-name{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--ivory);padding-bottom:.25rem}
+.apc-loc{font-size:.68rem;color:var(--muted)}
+.apc-body{padding:1rem 1.2rem 1.3rem}
+.apc-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem}
+.apc-bio{font-size:.8rem;color:var(--muted);line-height:1.8;margin-bottom:1rem}
+.apc-stats{display:flex;gap:1.5rem;padding:1rem 0;border-top:1px solid var(--border-w);border-bottom:1px solid var(--border-w);margin-bottom:1rem}
+.apc-stat-num{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--gold)}
+.apc-stat-lbl{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.apc-footer{display:flex;gap:.7rem}
+.apc-btn{flex:1;padding:.62rem;font-family:var(--body);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;text-align:center;transition:all .25s;cursor:pointer;border:none}
+.apc-btn-primary{background:var(--crimson);color:var(--ivory);border:1px solid var(--red)}
+.apc-btn-primary:hover{background:var(--red-lite)}
+.apc-btn-outline{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.apc-btn-outline:hover{background:var(--gold);color:var(--navy)}
+/* join */
+.join-cta{padding:5rem 4rem;background:var(--navy-mid);border-top:1px solid var(--border);text-align:center;position:relative;z-index:1}
+.perks{display:flex;justify-content:center;gap:3rem;margin:2.5rem 0;flex-wrap:wrap}
+.perk{text-align:center}
+.perk-icon{font-size:1.6rem;margin-bottom:.5rem}
+.perk-lbl{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+@media(max-width:960px){.filter-bar{padding:1.2rem 1.5rem}.spotlight-section{padding:4rem 1.5rem}.spotlight-inner{grid-template-columns:1fr;gap:3rem}.artists-section{padding:3rem 1.5rem 5rem}.artist-grid-main{grid-template-columns:1fr 1fr}.join-cta{padding:4rem 1.5rem}}
+@media(max-width:600px){.artist-grid-main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <a href="/" class="brand"><span class="brand-latin">Nepali</span><span class="brand-deva">कला</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="artistinfo.html" class="active">Artists</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="blog.html">Stories</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="nav-cart-wrap"><a href="cart.html" style="color:rgba(247,243,238,.7);text-decoration:none;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:.42rem .85rem">🛒 Cart <span class="cart-count" style="display:none">0</span></a></li>
+    <li><a href="join.html" class="nav-cta">Join / Sell</a></li>
+  </ul>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="page-hero">
+  <p class="eyebrow">The Creators</p>
+  <h1>Nepal's <em>Finest</em> Artists</h1>
+  <p class="section-sub">120+ artists from across Nepal — thangka masters to digital innovators.</p>
+</div>
+<div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span><span class="current">Artists</span></div>
+
+<!-- FILTER -->
+<div class="filter-bar filter-group">
+  <span class="filter-label">Style:</span>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="thangka">Thangka</button>
+  <button class="filter-btn" data-filter="modern">Modern</button>
+  <button class="filter-btn" data-filter="madhubani">Madhubani</button>
+  <button class="filter-btn" data-filter="sculpture">Sculpture</button>
+  <button class="filter-btn" data-filter="digital">Digital</button>
+  <button class="filter-btn" data-filter="photo">Photography</button>
+</div>
+
+<!-- SPOTLIGHT -->
+<div class="spotlight-section">
+  <div class="reveal"><p class="eyebrow">Artist of the Month</p><h2 class="section-title">Spotlight: <em>Karma Lama</em></h2></div>
+  <div class="spotlight-inner reveal">
+    <div class="spotlight-art"><div class="ap ap8"></div></div>
+    <div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem"><span class="tag">Thangka</span><span class="tag">Mandala</span><span class="tag">Traditional</span></div>
+      <h3 style="font-family:var(--serif);font-size:1.8rem;font-weight:700;color:var(--ivory);line-height:1.2;margin-bottom:.4rem">Karma Lama</h3>
+      <p style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem">Boudhanath, Kathmandu · 18 years</p>
+      <p class="section-sub" style="max-width:100%;margin-top:0">Karma Lama was initiated into the thangka tradition at age 12. His work fuses centuries-old iconographic rules with a sensitivity to light rarely seen in traditional Tibetan art. Each painting takes between three months to a year to complete.</p>
+      <div class="spotlight-quote">"Every brushstroke is a meditation. The painting teaches me as much as I teach it."</div>
+      <div class="mini-works">
+        <a href="product-detail.html?id=p1" class="mini-work"><div class="ap ap1"></div></a>
+        <a href="product-detail.html?id=p5" class="mini-work"><div class="ap ap8"></div></a>
+        <a href="product-detail.html?id=p9" class="mini-work"><div class="ap ap7"></div></a>
+      </div>
+      <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap">
+        <a href="artist-detail.html?id=1" class="btn btn-primary">Full Profile</a>
+        <a href="contact.html" class="btn btn-outline">Commission</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTIST GRID -->
+<div class="artists-section">
+  <div class="artist-grid-main filterable-grid">
+
+    <div class="apc reveal reveal-delay-1" id="artist-1" data-category="thangka">
+      <div class="apc-banner"><div class="ap ap8"></div><div class="apc-overlay"></div></div>
+      <div class="apc-avatar-row"><div class="apc-avatar"><div class="ap ap8"></div></div><div><div class="apc-name">Karma Lama</div><div class="apc-loc">📍 Boudhanath, KTM</div></div></div>
+      <div class="apc-body">
+        <div class="apc-tags"><span class="tag">Thangka</span><span class="tag">Mandala</span></div>
+        <p class="apc-bio">Master thangka painter with 18 years of traditional training. Known for intricately detailed mandalas using natural mineral pigments.</p>
+        <div class="apc-stats"><div><div class="apc-stat-num">24</div><div class="apc-stat-lbl">Works</div></div><div><div class="apc-stat-num">3</div><div class="apc-stat-lbl">Awards</div></div><div><div class="apc-stat-num">12</div><div class="apc-stat-lbl">Countries</div></div></div>
+        <div class="apc-footer"><a href="artist-detail.html?id=1" class="apc-btn apc-btn-primary">View Profile</a><a href="contact.html" class="apc-btn apc-btn-outline">Commission</a></div>
+      </div>
+    </div>
+
+    <div class="apc reveal reveal-delay-2" id="artist-2" data-category="modern">
+      <div class="apc-banner"><div class="ap ap2"></div><div class="apc-overlay"></div></div>
+      <div class="apc-avatar-row"><div class="apc-avatar"><div class="ap ap2"></div></div><div><div class="apc-name">Sita Maharjan</div><div class="apc-loc">📍 Lalitpur, Patan</div></div></div>
+      <div class="apc-body">
+        <div class="apc-tags"><span class="tag">Oil</span><span class="tag">Acrylic</span></div>
+        <p class="apc-bio">Contemporary painter exploring Nepal's vanishing landscapes through rich oil and acrylic compositions.</p>
+        <div class="apc-stats"><div><div class="apc-stat-num">18</div><div class="apc-stat-lbl">Works</div></div><div><div class="apc-stat-num">5</div><div class="apc-stat-lbl">Exhibits</div></div><div><div class="apc-stat-num">8</div><div class="apc-stat-lbl">Countries</div></div></div>
+        <div class="apc-footer"><a href="artist-detail.html?id=2" class="apc-btn apc-btn-primary">View Profile</a><a href="contact.html" class="apc-btn apc-btn-outline">Commission</a></div>
+      </div>
+    </div>
+
+    <div class="apc reveal reveal-delay-3" id="artist-3" data-category="madhubani">
+      <div class="apc-banner"><div class="ap ap3"></div><div class="apc-overlay"></div></div>
+      <div class="apc-avatar-row"><div class="apc-avatar"><div class="ap ap3"></div></div><div><div class="apc-name">Geeta Devi</div><div class="apc-loc">📍 Janakpur</div></div></div>
+      <div class="apc-body">
+        <div class="apc-tags"><span class="tag">Madhubani</span><span class="tag">Folk</span></div>
+        <p class="apc-bio">Renowned Madhubani artist from Janakpur, continuing a tradition passed through four generations of women artists.</p>
+        <div class="apc-stats"><div><div class="apc-stat-num">31</div><div class="apc-stat-lbl">Works</div></div><div><div class="apc-stat-num">7</div><div class="apc-stat-lbl">Awards</div></div><div><div class="apc-stat-num">20</div><div class="apc-stat-lbl">Countries</div></div></div>
+        <div class="apc-footer"><a href="artist-detail.html?id=3" class="apc-btn apc-btn-primary">View Profile</a><a href="contact.html" class="apc-btn apc-btn-outline">Commission</a></div>
+      </div>
+    </div>
+
+    <div class="apc reveal reveal-delay-1" id="artist-4" data-category="digital">
+      <div class="apc-banner"><div class="ap ap5"></div><div class="apc-overlay"></div></div>
+      <div class="apc-avatar-row"><div class="apc-avatar"><div class="ap ap5"></div></div><div><div class="apc-name">Anil Tamang</div><div class="apc-loc">📍 Thamel, KTM</div></div></div>
+      <div class="apc-body">
+        <div class="apc-tags"><span class="tag">Digital</span><span class="tag">Illustration</span></div>
+        <p class="apc-bio">Digital artist blending Himalayan mythology with contemporary aesthetics. Featured on international album covers.</p>
+        <div class="apc-stats"><div><div class="apc-stat-num">40</div><div class="apc-stat-lbl">Works</div></div><div><div class="apc-stat-num">9</div><div class="apc-stat-lbl">Clients</div></div><div><div class="apc-stat-num">25</div><div class="apc-stat-lbl">Countries</div></div></div>
+        <div class="apc-footer"><a href="artist-detail.html?id=4" class="apc-btn apc-btn-primary">View Profile</a><a href="contact.html" class="apc-btn apc-btn-outline">Commission</a></div>
+      </div>
+    </div>
+
+    <div class="apc reveal reveal-delay-2" id="artist-5" data-category="sculpture">
+      <div class="apc-banner"><div class="ap ap6"></div><div class="apc-overlay"></div></div>
+      <div class="apc-avatar-row"><div class="apc-avatar"><div class="ap ap6"></div></div><div><div class="apc-name">Rajan Shakya</div><div class="apc-loc">📍 Bhaktapur</div></div></div>
+      <div class="apc-body">
+        <div class="apc-tags"><span class="tag">Bronze</span><span class="tag">Sculpture</span></div>
+        <p class="apc-bio">Third-generation bronze sculptor from Bhaktapur's Shakya community. Specialises in lost-wax deity sculptures.</p>
+        <div class="apc-stats"><div><div class="apc-stat-num">12</div><div class="apc-stat-lbl">Works</div></div><div><div class="apc-stat-num">4</div><div class="apc-stat-lbl">Museums</div></div><div><div class="apc-stat-num">15</div><div class="apc-stat-lbl">Countries</div></div></div>
+        <div class="apc-footer"><a href="artist-detail.html?id=5" class="apc-btn apc-btn-primary">View Profile</a><a href="contact.html" class="apc-btn apc-btn-outline">Commission</a></div>
+      </div>
+    </div>
+
+    <div class="apc reveal reveal-delay-3" id="artist-6" data-category="photo">
+      <div class="apc-banner"><div class="ap ap7"></div><div class="apc-overlay"></div></div>
+      <div class="apc-avatar-row"><div class="apc-avatar"><div class="ap ap7"></div></div><div><div class="apc-name">Priya Gurung</div><div class="apc-loc">📍 Pokhara</div></div></div>
+      <div class="apc-body">
+        <div class="apc-tags"><span class="tag">Photography</span><span class="tag">Landscape</span></div>
+        <p class="apc-bio">Award-winning photographer specialising in high-altitude Himalayan landscapes and mountain community portraits.</p>
+        <div class="apc-stats"><div><div class="apc-stat-num">91</div><div class="apc-stat-lbl">Works</div></div><div><div class="apc-stat-num">6</div><div class="apc-stat-lbl">Awards</div></div><div><div class="apc-stat-num">30</div><div class="apc-stat-lbl">Countries</div></div></div>
+        <div class="apc-footer"><a href="artist-detail.html?id=6" class="apc-btn apc-btn-primary">View Profile</a><a href="contact.html" class="apc-btn apc-btn-outline">Commission</a></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- JOIN CTA -->
+<div class="join-cta reveal">
+  <p class="eyebrow" style="justify-content:center">For Artists</p>
+  <h2 class="section-title">Sell Your Art <em>Globally</em></h2>
+  <p class="section-sub" style="margin:1rem auto 0;text-align:center">Join Nepaliकला and reach collectors in 40+ countries. No upfront fees.</p>
+  <div class="perks">
+    <div class="perk"><div class="perk-icon">🎨</div><div class="perk-lbl">Free Profile</div></div>
+    <div class="perk"><div class="perk-icon">💸</div><div class="perk-lbl">80% Commission</div></div>
+    <div class="perk"><div class="perk-icon">📦</div><div class="perk-lbl">We Ship</div></div>
+    <div class="perk"><div class="perk-icon">🌍</div><div class="perk-lbl">40+ Countries</div></div>
+  </div>
+  <a href="join.html" class="btn btn-primary btn-lg">Apply to Sell</a>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div><a href="/" class="brand brand-light footer-brand"><span class="brand-latin">Nepali</span><span class="brand-deva">कला</span></a><p class="footer-desc">Nepal's premier art marketplace.</p></div>
+    <div class="footer-col"><h4>Explore</h4><ul><li><a href="shop.html">Shop</a></li><li><a href="category.html?cat=thangka">Thangka</a></li></ul></div>
+    <div class="footer-col"><h4>Artists</h4><ul><li><a href="join.html">Join Us</a></li><li><a href="partner.html">Partner</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a href="contact.html">Contact</a></li><li><a href="cart.html">Cart</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><div class="footer-copy">© 2025 Nepaliकला.</div></div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

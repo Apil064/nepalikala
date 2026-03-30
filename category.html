@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Category — Nepaliकला</title>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+.cat-hero{padding:11rem 4rem 5rem;position:relative;z-index:1;overflow:hidden;min-height:360px;display:flex;flex-direction:column;justify-content:flex-end;background:var(--navy-mid);border-bottom:1px solid var(--border)}
+.cat-hero-bg{position:absolute;inset:0;transition:opacity .4s}
+.cat-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,var(--navy) 0%,rgba(13,27,42,.7) 50%,rgba(13,27,42,.3) 100%)}
+.cat-hero-content{position:relative;z-index:2}
+.cat-nav{display:flex;gap:0;padding:0 4rem;background:var(--navy-mid);border-bottom:1px solid var(--border);overflow-x:auto;position:relative;z-index:1}
+.cat-nav::-webkit-scrollbar{height:2px;background:var(--border-w)}
+.cat-nav::-webkit-scrollbar-thumb{background:var(--gold)}
+.cat-nav-btn{padding:1rem 1.6rem;font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;transition:color .25s,border-color .25s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+.cat-nav-btn:hover{color:var(--gold)}
+.cat-nav-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.cat-products-section{padding:3rem 4rem 6rem;background:var(--navy);position:relative;z-index:1}
+.cat-products-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
+.cat-products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.cat-about{background:var(--navy-mid);border-top:1px solid var(--border);padding:5rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;position:relative;z-index:1}
+.cat-about-text blockquote{border-left:3px solid var(--gold);padding:1.2rem 1.5rem;background:rgba(200,168,75,.05);font-family:var(--serif);font-style:italic;color:var(--gold-lite);font-size:1.05rem;line-height:1.6;margin:1.5rem 0}
+.cat-about-img{aspect-ratio:4/3;overflow:hidden;border:1px solid var(--border)}
+.cat-about-img .ap{width:100%;height:100%;min-height:280px}
+@media(max-width:960px){.cat-hero{padding:9rem 1.5rem 4rem}.cat-nav{padding:0 1.5rem}.cat-products-section{padding:2.5rem 1.5rem 5rem}.cat-products-grid{grid-template-columns:1fr 1fr}.cat-about{grid-template-columns:1fr;padding:4rem 1.5rem;gap:3rem}}
+@media(max-width:600px){.cat-products-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <a href="/" class="brand"><span class="brand-latin">Nepali</span><span class="brand-deva">कला</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="artistinfo.html">Artists</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="blog.html">Stories</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="nav-cart-wrap"><a href="cart.html" style="color:rgba(247,243,238,.7);text-decoration:none;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:.42rem .85rem">🛒 Cart <span class="cart-count" style="display:none">0</span></a></li>
+    <li><a href="shop.html" class="nav-cta">Shop Now</a></li>
+  </ul>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- DYNAMIC CAT HERO -->
+<div class="cat-hero" id="cat-hero">
+  <div class="cat-hero-bg ap ap8" id="cat-bg"></div>
+  <div class="cat-hero-overlay"></div>
+  <div class="cat-hero-content">
+    <p class="eyebrow" id="cat-eyebrow">Art Category</p>
+    <h1 style="font-family:var(--serif);font-size:clamp(2.5rem,5vw,5rem);font-weight:700;line-height:1.08" id="cat-title">Thangka</h1>
+    <p class="section-sub" id="cat-desc">Sacred Buddhist paintings rendered in natural mineral pigments on cotton or silk.</p>
+  </div>
+</div>
+<div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span><a href="shop.html">Shop</a><span class="sep">›</span><span class="current" id="bc-cat">Thangka</span></div>
+
+<!-- CATEGORY NAV -->
+<nav class="cat-nav">
+  <a href="category.html?cat=thangka" class="cat-nav-btn" data-cat="thangka">Thangka</a>
+  <a href="category.html?cat=modern" class="cat-nav-btn" data-cat="modern">Modern</a>
+  <a href="category.html?cat=madhubani" class="cat-nav-btn" data-cat="madhubani">Madhubani</a>
+  <a href="category.html?cat=sculpture" class="cat-nav-btn" data-cat="sculpture">Sculpture</a>
+  <a href="category.html?cat=digital" class="cat-nav-btn" data-cat="digital">Digital</a>
+  <a href="category.html?cat=photography" class="cat-nav-btn" data-cat="photography">Photography</a>
+</nav>
+
+<!-- PRODUCTS -->
+<div class="cat-products-section">
+  <div class="cat-products-header reveal">
+    <div class="results-count" id="results-count" style="font-size:.78rem;color:var(--muted)">Showing all works</div>
+    <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap">
+      <div class="filter-group" style="display:flex;gap:0;border:1px solid var(--border-w)">
+        <button class="store-tab filter-btn active" data-filter="all" style="padding:.45rem 1.1rem;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;background:none;border:none;border-right:1px solid var(--border-w);color:var(--muted);cursor:pointer;transition:background .25s,color .25s">All</button>
+        <button class="store-tab filter-btn" data-filter="original" style="padding:.45rem 1.1rem;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;background:none;border:none;border-right:1px solid var(--border-w);color:var(--muted);cursor:pointer;transition:background .25s,color .25s">Originals</button>
+        <button class="store-tab filter-btn" data-filter="print" style="padding:.45rem 1.1rem;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;background:none;border:none;color:var(--muted);cursor:pointer;transition:background .25s,color .25s">Prints</button>
+      </div>
+      <select class="sort-select" style="background:rgba(255,255,255,.04);border:1px solid var(--border-w);color:var(--ivory);padding:.48rem 1rem;font-size:.74rem;outline:none;cursor:pointer"><option>Featured</option><option>Price: Low–High</option><option>Price: High–Low</option><option>Newest</option></select>
+    </div>
+  </div>
+  <div class="cat-products-grid filterable-grid">
+    <div class="product-card reveal" data-category="original" data-product-id="p1" data-title="Himalayan Dawn Thangka" data-price="85000" data-artist="Karma Lama" data-type="original">
+      <div class="product-thumb"><div class="ap ap8"></div><span class="product-badge badge-original">Original</span><div class="product-thumb-overlay"><a href="product-detail.html?id=p1" class="thumb-action">View Details</a><button class="thumb-action btn-cart">+ Cart</button></div></div>
+      <div class="product-info"><a href="artist-detail.html?id=1" class="product-artist-link">Karma Lama</a><a href="product-detail.html?id=p1" class="product-title">Himalayan Dawn Thangka</a><div class="product-meta">Natural pigments · 60×80 cm</div><div class="product-price-row"><span class="product-price">NPR 85,000</span><button class="btn-cart">Cart</button></div></div>
+    </div>
+    <div class="product-card reveal reveal-delay-1" data-category="print" data-product-id="p5" data-title="Sacred Wheel" data-price="3200" data-artist="Karma Lama" data-type="print">
+      <div class="product-thumb"><div class="ap ap1"></div><span class="product-badge badge-print">Print</span><div class="product-thumb-overlay"><a href="product-detail.html?id=p5" class="thumb-action">View Details</a><button class="thumb-action btn-cart">+ Cart</button></div></div>
+      <div class="product-info"><a href="artist-detail.html?id=1" class="product-artist-link">Karma Lama</a><a href="product-detail.html?id=p5" class="product-title">Sacred Wheel</a><div class="product-meta">Giclée print · Ed. 25 · A2</div><div class="product-price-row"><span class="product-price">NPR 3,200</span><button class="btn-cart">Cart</button></div></div>
+    </div>
+    <div class="product-card reveal reveal-delay-2" data-category="original" data-product-id="p9" data-title="Green Tara" data-price="140000" data-artist="Karma Lama" data-type="original">
+      <div class="product-thumb"><div class="ap ap4"></div><span class="product-badge badge-original">Original</span><div class="product-thumb-overlay"><a href="product-detail.html?id=p9" class="thumb-action">View Details</a><button class="thumb-action btn-cart">+ Cart</button></div></div>
+      <div class="product-info"><a href="artist-detail.html?id=1" class="product-artist-link">Karma Lama</a><a href="product-detail.html?id=p9" class="product-title">Green Tara</a><div class="product-meta">Gold leaf & pigment · 100×130 cm</div><div class="product-price-row"><span class="product-price">NPR 1,40,000</span><button class="btn-cart">Cart</button></div></div>
+    </div>
+    <div class="product-card reveal reveal-delay-3" data-category="print" data-product-id="p10" data-title="Medicine Buddha" data-price="2800" data-artist="Karma Lama" data-type="print">
+      <div class="product-thumb"><div class="ap ap7"></div><span class="product-badge badge-print">Print</span><div class="product-thumb-overlay"><a href="product-detail.html?id=p10" class="thumb-action">View Details</a><button class="thumb-action btn-cart">+ Cart</button></div></div>
+      <div class="product-info"><a href="artist-detail.html?id=1" class="product-artist-link">Karma Lama</a><a href="product-detail.html?id=p10" class="product-title">Medicine Buddha</a><div class="product-meta">Giclée print · Ed. 50</div><div class="product-price-row"><span class="product-price">NPR 2,800</span><button class="btn-cart">Cart</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT CATEGORY -->
+<div class="cat-about">
+  <div class="cat-about-text reveal">
+    <p class="eyebrow">About the Style</p>
+    <h2 class="section-title" id="about-title">Thangka: <em>Sacred Art</em></h2>
+    <div class="divider-gold"></div>
+    <p class="section-sub" id="about-desc" style="max-width:100%">Thangka is a Tibetan Buddhist painting on cotton or silk appliqué, usually depicting Buddhist deities, scenes, or mandalas. Dating back over 1,000 years, the tradition requires years of training under a master and uses mineral pigments that have remained unchanged for centuries.</p>
+    <blockquote id="about-quote">"Every thangka is a map — not of geography, but of the mind seeking liberation."</blockquote>
+    <a href="blog.html" class="btn btn-outline" style="margin-top:.5rem">Read the Stories</a>
+  </div>
+  <div class="cat-about-img reveal reveal-delay-2">
+    <div class="ap ap8" id="about-img"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div><a href="/" class="brand brand-light footer-brand"><span class="brand-latin">Nepali</span><span class="brand-deva">कला</span></a><p class="footer-desc">Nepal's premier art marketplace.</p></div>
+    <div class="footer-col"><h4>Categories</h4><ul><li><a href="category.html?cat=thangka">Thangka</a></li><li><a href="category.html?cat=modern">Modern Art</a></li><li><a href="category.html?cat=madhubani">Madhubani</a></li><li><a href="category.html?cat=photography">Photography</a></li></ul></div>
+    <div class="footer-col"><h4>Explore</h4><ul><li><a href="shop.html">All Works</a></li><li><a href="artistinfo.html">Artists</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a href="contact.html">Contact</a></li><li><a href="cart.html">Cart</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><div class="footer-copy">© 2025 Nepaliकला.</div></div>
+</footer>
+<script src="script.js"></script>
+<script>
+const CAT_DATA={
+  thangka:{title:'Thangka',desc:'Sacred Buddhist paintings in natural mineral pigments on cotton or silk.',quote:'"Every thangka is a map — not of geography, but of the mind seeking liberation."',bg:'ap8',color:'#8b1a1a'},
+  modern:{title:'Modern & Contemporary',desc:'Nepal\'s contemporary artists reinterpreting Himalayan life through oils, acrylics, and mixed media.',quote:'"We paint what the tourists don\'t expect — the Nepal we actually live in."',bg:'ap2',color:'#0d3d5c'},
+  madhubani:{title:'Madhubani',desc:'Folk painting tradition from the Mithila region, using geometric patterns and mythological subjects.',quote:'"The lines know where to go. My hand just follows what the women before me learned."',bg:'ap3',color:'#3d2e00'},
+  sculpture:{title:'Sculpture & Craft',desc:'Bronze, stone, and wood sculptures carrying Nepal\'s ancient artistic traditions forward.',quote:'"I do not make statues. I release the deity already inside the metal."',bg:'ap6',color:'#3d2010'},
+  digital:{title:'Digital Art',desc:'Nepali digital artists fusing Himalayan mythology with contemporary digital techniques.',quote:'"The pixel is my brush. Mount Meru is my canvas."',bg:'ap5',color:'#350d35'},
+  photography:{title:'Photography',desc:'Stunning photographic works capturing Nepal\'s landscapes, people, and festivals.',quote:'"At altitude, every sunrise is a once-in-a-lifetime event."',bg:'ap7',color:'#0d355c'}
+};
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  const cat=params.get('cat')||'thangka';
+  const d=CAT_DATA[cat]||CAT_DATA.thangka;
+  document.getElementById('cat-title').textContent=d.title;
+  document.getElementById('cat-desc').textContent=d.desc;
+  document.getElementById('bc-cat').textContent=d.title;
+  document.getElementById('cat-eyebrow').textContent='Category: '+d.title;
+  document.getElementById('about-title').innerHTML=d.title+': <em>Sacred Art</em>';
+  document.getElementById('about-desc').textContent=d.desc;
+  document.getElementById('about-quote').textContent=d.quote;
+  const bg=document.getElementById('cat-bg');
+  bg.className='cat-hero-bg ap '+d.bg;
+  document.getElementById('about-img').className='ap '+d.bg;
+  document.querySelectorAll('.cat-nav-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.cat===cat);
+  });
+  document.title=d.title+' — Nepaliकला';
+})();
+</script>
+</body>
+</html>

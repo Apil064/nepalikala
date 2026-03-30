@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Partner With Us — Nepaliकला</title>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+.partner-hero{padding:12rem 4rem 6rem;background:linear-gradient(135deg,var(--navy-mid) 0%,#1a0d0d 100%);position:relative;overflow:hidden;text-align:center;z-index:1}
+.partner-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 70%,rgba(139,26,26,.18),transparent 65%)}
+.partner-hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(200,168,75,.015) 40px,rgba(200,168,75,.015) 41px)}
+.partner-hero h1{font-family:var(--serif);font-size:clamp(3rem,5.5vw,6rem);font-weight:900;line-height:1.05;opacity:0;animation:fadeUp .9s .3s forwards;position:relative;z-index:1}
+.partner-hero p.sub{font-size:1rem;color:rgba(247,243,238,.7);max-width:600px;margin:1.5rem auto 0;line-height:1.9;opacity:0;animation:fadeUp .9s .6s forwards;position:relative;z-index:1}
+.partner-hero .cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;opacity:0;animation:fadeUp .9s .8s forwards;position:relative;z-index:1}
+
+/* Partner types */
+.types-section{padding:5rem 4rem;background:var(--navy);position:relative;z-index:1}
+.types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3.5rem}
+.type-card{border:1px solid var(--border-w);padding:2.5rem 2rem;transition:border-color .35s,transform .35s,box-shadow .35s;position:relative;overflow:hidden}
+.type-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--gold),var(--crimson));opacity:0;transition:opacity .35s}
+.type-card:hover{border-color:rgba(200,168,75,.4);transform:translateY(-4px);box-shadow:var(--shadow)}
+.type-card:hover::before{opacity:1}
+.type-icon{font-size:2.2rem;margin-bottom:1.2rem}
+.type-title{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--ivory);margin-bottom:.6rem}
+.type-desc{font-size:.83rem;color:var(--muted);line-height:1.85;margin-bottom:1.5rem}
+.type-perks{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem}
+.type-perks li{font-size:.78rem;color:var(--muted);display:flex;align-items:flex-start;gap:.6rem}
+.type-perks li::before{content:'→';color:var(--gold);flex-shrink:0}
+
+/* Partners logos */
+.partners-section{padding:4rem 4rem;background:var(--navy-mid);border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;position:relative;z-index:1}
+.partners-logos{display:flex;justify-content:center;flex-wrap:wrap;gap:2rem;margin-top:2.5rem;align-items:center}
+.partner-logo{padding:.8rem 2rem;border:1px solid var(--border-w);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);transition:border-color .25s,color .25s}
+.partner-logo:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Stats */
+.stats-section{padding:4rem 4rem;background:var(--navy);position:relative;z-index:1}
+.stats-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.stat-box{text-align:center;padding:2rem 1.5rem;border:1px solid var(--border-w)}
+.stat-box-num{font-family:var(--serif);font-size:2.8rem;font-weight:700;color:var(--gold);line-height:1}
+.stat-box-label{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:.6rem}
+
+/* Enquiry form */
+.enquiry-section{padding:5rem 4rem 7rem;background:var(--navy-mid);border-top:1px solid var(--border);position:relative;z-index:1}
+.enquiry-layout{display:grid;grid-template-columns:1fr 1.3fr;gap:5rem;align-items:start}
+.enquiry-info h3{font-family:var(--serif);font-size:1.6rem;font-weight:700;margin-bottom:1rem}
+.contact-block{display:flex;flex-direction:column;gap:1rem;margin-top:2rem}
+.contact-row{display:flex;align-items:flex-start;gap:.9rem;padding:1rem;border:1px solid var(--border-w)}
+.contact-row-icon{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
+.contact-row-label{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.2rem}
+.contact-row-val{font-size:.82rem;color:var(--ivory)}
+.enquiry-form{background:var(--navy-card);border:1px solid var(--border);padding:2.5rem}
+.form-stack{display:flex;flex-direction:column;gap:1.2rem}
+
+@media(max-width:960px){.partner-hero{padding:9rem 1.5rem 5rem}.types-section{padding:4rem 1.5rem}.types-grid{grid-template-columns:1fr}.partners-section{padding:3rem 1.5rem}.stats-section{padding:3rem 1.5rem}.stats-inner{grid-template-columns:1fr 1fr}.enquiry-section{padding:4rem 1.5rem 5rem}.enquiry-layout{grid-template-columns:1fr}}
+@media(max-width:600px){.stats-inner{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <a href="/" class="brand"><span class="brand-latin">Nepali</span><span class="brand-deva">कला</span></a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="artistinfo.html">Artists</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="blog.html">Stories</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li class="nav-cart-wrap"><a href="cart.html" style="color:rgba(247,243,238,.7);text-decoration:none;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:.42rem .85rem">🛒 Cart <span class="cart-count" style="display:none">0</span></a></li>
+    <li><a href="join.html" class="nav-cta">Join Us</a></li>
+  </ul>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<div class="partner-hero">
+  <p class="eyebrow" style="justify-content:center;position:relative;z-index:1;opacity:0;animation:fadeIn .8s .1s forwards">For Organisations &amp; Businesses</p>
+  <h1>Partner<br><em style="color:var(--gold)">With Us.</em></h1>
+  <p class="sub">Galleries, hotels, cultural institutions, NGOs, and brands — let's build something meaningful together for Nepali art.</p>
+  <div class="cta-row">
+    <a href="#enquire" class="btn btn-primary btn-lg">Start a Conversation</a>
+    <a href="join.html" class="btn btn-outline-w">Join as Artist Instead</a>
+  </div>
+</div>
+
+<!-- PARTNER TYPES -->
+<div class="types-section">
+  <div class="reveal" style="text-align:center"><p class="eyebrow" style="justify-content:center">Partnership Models</p><h2 class="section-title">How We Can <em>Work Together</em></h2></div>
+  <div class="types-grid">
+    <div class="type-card reveal reveal-delay-1">
+      <div class="type-icon">🏛</div>
+      <h3 class="type-title">Gallery &amp; Museum</h3>
+      <p class="type-desc">Physical exhibition spaces that want to offer a digital extension of their Nepali art collections — or co-curate shows with us.</p>
+      <ul class="type-perks">
+        <li>Co-branded exhibition campaigns</li>
+        <li>Shared artist roster and profiles</li>
+        <li>Joint online &amp; physical sales</li>
+        <li>Curatorial collaboration</li>
+        <li>Co-branded certificates of authenticity</li>
+      </ul>
+      <a href="#enquire" class="btn btn-outline btn-sm">Express Interest</a>
+    </div>
+    <div class="type-card reveal reveal-delay-2">
+      <div class="type-icon">🏨</div>
+      <h3 class="type-title">Hospitality &amp; Luxury</h3>
+      <p class="type-desc">Hotels, resorts, and luxury brands that want to feature authentic Nepali art — both for décor and as a guest experience.</p>
+      <ul class="type-perks">
+        <li>Curated art sourcing &amp; installation</li>
+        <li>In-property "gallery wall" programmes</li>
+        <li>Artist residencies for your guests</li>
+        <li>Co-branded art retail for guests</li>
+        <li>Custom commission facilitation</li>
+      </ul>
+      <a href="#enquire" class="btn btn-outline btn-sm">Express Interest</a>
+    </div>
+    <div class="type-card reveal reveal-delay-3">
+      <div class="type-icon">🌐</div>
+      <h3 class="type-title">Digital &amp; Media</h3>
+      <p class="type-desc">Platforms, publishers, and media brands that want to integrate or feature Nepali art in their digital ecosystems.</p>
+      <ul class="type-perks">
+        <li>White-label art shop integration</li>
+        <li>Content licensing agreements</li>
+        <li>Sponsored artist spotlights</li>
+        <li>API access to artwork catalogue</li>
+        <li>Affiliate revenue sharing</li>
+      </ul>
+      <a href="#enquire" class="btn btn-outline btn-sm">Express Interest</a>
+    </div>
+    <div class="type-card reveal reveal-delay-1">
+      <div class="type-icon">🤝</div>
+      <h3 class="type-title">NGO &amp; Cultural</h3>
+      <p class="type-desc">Non-profits, cultural organisations, and government bodies working to preserve or promote Nepali artistic heritage.</p>
+      <ul class="type-perks">
+        <li>Artist grant &amp; scholarship programmes</li>
+        <li>Community art documentation</li>
+        <li>Educational content partnerships</li>
+        <li>Cultural heritage digitisation</li>
+        <li>Festival and event collaboration</li>
+      </ul>
+      <a href="#enquire" class="btn btn-outline btn-sm">Express Interest</a>
+    </div>
+    <div class="type-card reveal reveal-delay-2">
+      <div class="type-icon">📦</div>
+      <h3 class="type-title">Corporate &amp; Gifting</h3>
+      <p class="type-desc">Companies seeking unique, meaningful corporate gifts, office art, or CSR initiatives rooted in Nepali culture.</p>
+      <ul class="type-perks">
+        <li>Bulk print &amp; original orders</li>
+        <li>Custom commissioned pieces</li>
+        <li>Branded packaging for gifts</li>
+        <li>CSR programme design</li>
+        <li>Employee experience art events</li>
+      </ul>
+      <a href="#enquire" class="btn btn-outline btn-sm">Express Interest</a>
+    </div>
+    <div class="type-card reveal reveal-delay-3">
+      <div class="type-icon">✈</div>
+      <h3 class="type-title">Tourism &amp; Travel</h3>
+      <p class="type-desc">Travel companies, tour operators, and experience platforms that want to offer art as part of their Nepal experience.</p>
+      <ul class="type-perks">
+        <li>Studio visit packages for tourists</li>
+        <li>Art-focused itinerary design</li>
+        <li>Workshop and masterclass packages</li>
+        <li>Co-branded souvenir programmes</li>
+        <li>Artist meet-and-greet experiences</li>
+      </ul>
+      <a href="#enquire" class="btn btn-outline btn-sm">Express Interest</a>
+    </div>
+  </div>
+</div>
+
+<!-- EXISTING PARTNERS -->
+<div class="partners-section">
+  <div class="reveal"><p class="eyebrow" style="justify-content:center">Trusted By</p><h2 class="section-title" style="font-size:clamp(1.5rem,2.5vw,2.5rem)">Our Current <em>Partners</em></h2></div>
+  <div class="partners-logos">
+    <div class="partner-logo">Himalayan Art Foundation</div>
+    <div class="partner-logo">Kathmandu Art House</div>
+    <div class="partner-logo">Nepal Tourism Board</div>
+    <div class="partner-logo">Dwarika's Hotels</div>
+    <div class="partner-logo">Boudhanath Stupa Society</div>
+    <div class="partner-logo">Nepal Academy of Fine Arts</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-box reveal reveal-delay-1"><div class="stat-box-num">120+</div><div class="stat-box-label">Artists on Platform</div></div>
+    <div class="stat-box reveal reveal-delay-2"><div class="stat-box-num">40+</div><div class="stat-box-label">Countries Reached</div></div>
+    <div class="stat-box reveal reveal-delay-3"><div class="stat-box-num">800+</div><div class="stat-box-label">Artworks Sold</div></div>
+    <div class="stat-box reveal reveal-delay-4"><div class="stat-box-num">18</div><div class="stat-box-label">Active Partners</div></div>
+  </div>
+</div>
+
+<!-- ENQUIRY FORM -->
+<div class="enquiry-section" id="enquire">
+  <div class="enquiry-layout">
+    <div class="enquiry-info reveal">
+      <p class="eyebrow">Get in Touch</p>
+      <h3>Let's Talk<br><em style="font-style:italic;color:var(--gold)">Partnership.</em></h3>
+      <div class="divider-gold"></div>
+      <p class="section-sub" style="max-width:100%;margin-top:0">Every partnership is different. Tell us about your organisation and vision — we'll respond within 48 hours with ideas tailored to you.</p>
+      <div class="contact-block">
+        <div class="contact-row"><span class="contact-row-icon">✉</span><div><div class="contact-row-label">Email</div><div class="contact-row-val">partnerships@nepalikala.art</div></div></div>
+        <div class="contact-row"><span class="contact-row-icon">📞</span><div><div class="contact-row-label">Phone</div><div class="contact-row-val">+977 1 456 7890</div></div></div>
+        <div class="contact-row"><span class="contact-row-icon">📍</span><div><div class="contact-row-label">Office</div><div class="contact-row-val">Thamel Marg, Kathmandu 44600</div></div></div>
+      </div>
+    </div>
+    <div class="enquiry-form reveal reveal-delay-2">
+      <h3 style="font-family:var(--serif);font-size:1.4rem;font-weight:700;margin-bottom:1.5rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border-w)">Partnership Enquiry</h3>
+      <form class="form-stack js-form">
+        <div class="form-row">
+          <div class="form-group"><label>Your Name *</label><input type="text" placeholder="Full name" required/></div>
+          <div class="form-group"><label>Organisation *</label><input type="text" placeholder="Company / NGO name" required/></div>
+        </div>
+        <div class="form-group"><label>Email *</label><input type="email" placeholder="you@organisation.com" required/></div>
+        <div class="form-group"><label>Phone</label><input type="tel" placeholder="+977 / international"/></div>
+        <div class="form-group"><label>Partnership Type *</label>
+          <select required>
+            <option value="">Select category…</option>
+            <option>Gallery / Museum</option>
+            <option>Hospitality / Luxury Hotel</option>
+            <option>Digital / Media Platform</option>
+            <option>NGO / Cultural Organisation</option>
+            <option>Corporate / Gifting</option>
+            <option>Tourism / Travel</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Budget Range</label>
+          <select>
+            <option>Prefer to discuss</option>
+            <option>NPR 50,000 – 2,00,000</option>
+            <option>NPR 2,00,000 – 10,00,000</option>
+            <option>NPR 10,00,000+</option>
+            <option>Revenue share / equity model</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Tell us about your vision *</label><textarea placeholder="Describe your organisation, what you're hoping to achieve through this partnership, and any specific ideas you have in mind…" style="min-height:130px" required></textarea></div>
+        <label class="check-label"><input type="checkbox" required/><span>I agree to Nepaliकला's <a href="#" style="color:var(--gold)">Privacy Policy</a>.</span></label>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Send Enquiry →</button>
+        <p class="form-hint" style="text-align:center">We respond within 48 hours.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div><a href="/" class="brand brand-light footer-brand"><span class="brand-latin">Nepali</span><span class="brand-deva">कला</span></a><p class="footer-desc">Nepal's premier marketplace for original art and prints.</p><div class="footer-social-row"><a href="#" class="footer-social-btn">ig</a><a href="#" class="footer-social-btn">fb</a><a href="#" class="footer-social-btn">pt</a></div></div>
+    <div class="footer-col"><h4>Partnership</h4><ul><li><a href="partner.html">All Models</a></li><li><a href="#enquire">Enquire</a></li><li><a href="join.html">Join as Artist</a></li></ul></div>
+    <div class="footer-col"><h4>Explore</h4><ul><li><a href="shop.html">Shop</a></li><li><a href="artistinfo.html">Artists</a></li><li><a href="blog.html">Stories</a></li></ul></div>
+    <div class="footer-col"><h4>Help</h4><ul><li><a href="contact.html">Contact</a></li><li><a href="cart.html">Cart</a></li><li><a href="#">FAQ</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><div class="footer-copy">© 2025 Nepaliकला.</div><div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
